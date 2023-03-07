@@ -1,0 +1,24 @@
+---
+bases:
+  - "../base/env-{{ .Environment.Name }}.yaml"
+  - "../base/repos.yaml"
+
+---
+releases:
+{{- if hasKey .Environment.Values.apps "eck" }}
+  - name: "eck"
+    namespace: {{ .Environment.Name }}
+    installed: {{ .Environment.Values.apps.eck.enabled }}
+    hooks:
+    - events: ["presync", "prepare"]
+      command: "hooks/eck/preinstall.sh"
+    labels:
+      chart: "elastic"
+      repo: "eck-stack"
+      role: "elastic-stack"
+    chart: "elastic/eck-stack"
+    values:
+    - "values/eck/values-{{ .Environment.Name }}.yaml"
+    version: {{ .Environment.Values.apps.eck.version }}
+    wait: false
+{{- end }}

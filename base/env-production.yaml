@@ -1,0 +1,17 @@
+---
+environments:
+  production:
+    values:
+    - helmDefaults:
+      - tillerless: true
+      - kubeContext: jackson.com
+      - cleanupOnFail: true
+      - createNamespace: true
+      - recreatePods: true
+      - historyMax: 20
+      - devel: true
+
+    - apps:
+        eck:
+          enabled: true
+          version: 0.3.0

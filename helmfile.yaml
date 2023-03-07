@@ -1,0 +1,9 @@
+---
+bases:
+  - "base/repos.yaml"
+  - "base/env-develop.yaml"
+  - "base/env-test.yaml"
+  - "base/env-production.yaml"
+
+helmfiles:
+  - "releases/releases.yaml.gotmpl"
