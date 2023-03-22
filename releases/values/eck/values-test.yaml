@@ -1,7 +1,7 @@
 ---
 eck-elasticsearch:
   enabled: true
-  version: 7.17.9
+  version: 7.17.7
   fullnameOverride: dht-elastic
   annotations:
     eck.k8s.elastic.co/license: basic
@@ -10,6 +10,16 @@ eck-elasticsearch:
     count: 3
     config:
       node.roles: ["master"]
+      xpack:
+        security:
+          authc:
+            realms:
+              active_directory:
+                disad:
+                  order: 0
+                  domain_name: ad.example.com
+                  url: ldaps://ad.example.com:636
+                  bind_dn: es_svc_user@ad.example.com
     podTemplate:
       spec:
         containers:
@@ -104,7 +114,7 @@ eck-elasticsearch:
 
 eck-kibana:
   enabled: true
-  version: 7.17.9
+  version: 7.17.7
   fullnameOverride: dht-kibana
   annotations:
     eck.k8s.elastic.co/license: basic
@@ -132,4 +142,9 @@ eck-kibana:
           port: 5601
           targetPort: http
           type: LoadBalancer
+      tls:
+        selfSignedCertificate:
+          disabled: true
+        certificate:
+          secretName: custom-kibana-tls-secret
 
