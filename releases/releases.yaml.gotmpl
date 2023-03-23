@@ -18,7 +18,67 @@ releases:
       role: "elastic-stack"
     chart: "elastic/eck-stack"
     values:
-    - "values/eck/values-{{ .Environment.Name }}.yaml"
+    - "values/{{ .Environment.Name }}/values-eck.yaml"
     version: {{ .Environment.Values.apps.eck.version }}
+    wait: false
+{{- end }}
+
+{{- if hasKey .Environment.Values.apps "esMaster" }}
+  - name: "es-master"
+    namespace: {{ .Environment.Name }}
+    installed: {{ .Environment.Values.apps.esMaster.enabled }}
+    labels:
+      chart: "elastic"
+      repo: "elasticsearch"
+      role: "master"
+    chart: "elastic/elasticsearch"
+    values:
+    - "values/{{ .Environment.Name }}/values-esMaster.yaml"
+    version: {{ .Environment.Values.apps.esMaster.version }}
+    wait: false
+{{- end }}
+
+{{- if hasKey .Environment.Values.apps "esHot" }}
+  - name: "es-hot"
+    namespace: {{ .Environment.Name }}
+    installed: {{ .Environment.Values.apps.esHot.enabled }}
+    labels:
+      chart: "elastic"
+      repo: "elasticsearch"
+      role: "hot"
+    chart: "elastic/elasticsearch"
+    values:
+    - "values/{{ .Environment.Name }}/values-esHot.yaml"
+    version: {{ .Environment.Values.apps.esHot.version }}
+    wait: false
+{{- end }}
+
+{{- if hasKey .Environment.Values.apps "esCold" }}
+  - name: "es-cold"
+    namespace: {{ .Environment.Name }}
+    installed: {{ .Environment.Values.apps.esCold.enabled }}
+    labels:
+      chart: "elastic"
+      repo: "elasticsearch"
+      role: "cold"
+    chart: "elastic/elasticsearch"
+    values:
+    - "values/{{ .Environment.Name }}/values-esCold.yaml"
+    version: {{ .Environment.Values.apps.esCold.version }}
+    wait: false
+{{- end }}
+
+{{- if hasKey .Environment.Values.apps "kibana" }}
+  - name: "kibana"
+    namespace: {{ .Environment.Name }}
+    installed: {{ .Environment.Values.apps.kibana.enabled }}
+    labels:
+      chart: "elastic"
+      repo: "kibana"
+      role: "dashboard"
+    chart: "elastic/kibana"
+    values:
+    - "values/{{ .Environment.Name }}/values-kibana.yaml"
+    version: {{ .Environment.Values.apps.kibana.version }}
     wait: false
 {{- end }}

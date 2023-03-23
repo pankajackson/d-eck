@@ -12,6 +12,20 @@ environments:
       - devel: true
 
     - apps:
+        # TODO: Remove ECK Once the cluster is stable
         eck:
-          enabled: true
+          enabled: false
           version: 0.3.0
+        esMaster:
+          enabled: true
+          version: 8.5.1
+        esHot:
+          enabled: true
+          version: 8.5.1
+        esCold:
+          enabled: true
+          version: 8.5.1
+        # TODO: Currently Kibana is Unstable
+        kibana:
+          enabled: false
+          version: 8.5.1

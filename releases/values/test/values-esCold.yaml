@@ -1,0 +1,79 @@
+---
+clusterName: "dht"
+nodeGroup: "cold"
+replicas: 1
+imageTag: 7.17.7
+
+extraEnvs:
+  - name: ELASTIC_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: dht-master-credentials
+        key: password
+  - name: xpack.security.enabled
+    value: "true"
+  - name: xpack.security.transport.ssl.enabled
+    value: "true"
+  - name: xpack.security.http.ssl.enabled
+    value: "true"
+  - name: xpack.security.transport.ssl.verification_mode
+    value: "certificate"
+  - name: xpack.security.transport.ssl.key
+    value: "/usr/share/elasticsearch/config/certs/tls.key"
+  - name: xpack.security.transport.ssl.certificate
+    value: "/usr/share/elasticsearch/config/certs/tls.crt"
+  - name: xpack.security.transport.ssl.certificate_authorities
+    value: "/usr/share/elasticsearch/config/certs/ca.crt"
+  - name: xpack.security.http.ssl.key
+    value: "/usr/share/elasticsearch/config/certs/tls.key"
+  - name: xpack.security.http.ssl.certificate
+    value: "/usr/share/elasticsearch/config/certs/tls.crt"
+  - name: xpack.security.http.ssl.certificate_authorities
+    value: "/usr/share/elasticsearch/config/certs/ca.crt"
+
+roles:
+  - data_cold
+
+esJavaOpts: "-Xms1g -Xmx1g"
+
+resources:
+  requests:
+    memory: 2Gi
+    cpu: 100m
+  limits:
+    memory: 3Gi
+    cpu: 2
+
+volumeClaimTemplate:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: "nfs"
+  resources:
+    requests:
+      storage: 5Gi
+
+service:
+  enabled: true
+  labels: {}
+  labelsHeadless: {}
+  type: ClusterIP
+  # Consider that all endpoints are considered "ready" even if the Pods themselves are not
+  # https://kubernetes.io/docs/reference/kubernetes-api/service-resources/service-v1/#ServiceSpec
+  publishNotReadyAddresses: false
+  nodePort: ""
+  annotations: {}
+  httpPortName: http
+  transportPortName: transport
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+  externalTrafficPolicy: ""
+
+updateStrategy: RollingUpdate
+
+secret:
+  enabled: false
+
+createCert: false
+secretMounts:
+  - name: elastic-certificates
+    secretName: dht-master-certs
+    path: /usr/share/elasticsearch/config/certs
