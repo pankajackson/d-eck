@@ -10,16 +10,17 @@ eck-elasticsearch:
     count: 3
     config:
       node.roles: ["master"]
-      xpack:
-        security:
-          authc:
-            realms:
-              active_directory:
-                disad:
-                  order: 0
-                  domain_name: ad.example.com
-                  url: ldaps://ad.example.com:636
-                  bind_dn: es_svc_user@ad.example.com
+#      TODO: LDAP
+#      xpack:
+#        security:
+#          authc:
+#            realms:
+#              active_directory:
+#                disad:
+#                  order: 0
+#                  domain_name: ad.example.com
+#                  url: ldaps://ad.example.com:636
+#                  bind_dn: es_svc_user@ad.example.com
     podTemplate:
       spec:
         containers:
@@ -49,7 +50,7 @@ eck-elasticsearch:
             storage: 5Gi
         # storageClassName: local-storage
   - name: hot
-    count: 2
+    count: 1
     config:
       node.roles: ["data_hot", "data_content", "ingest"]
     podTemplate:
@@ -142,9 +143,10 @@ eck-kibana:
           port: 5601
           targetPort: http
           type: LoadBalancer
-      tls:
-        selfSignedCertificate:
-          disabled: true
-        certificate:
-          secretName: custom-kibana-tls-secret
+#      TODO: TLS
+#      tls:
+#        selfSignedCertificate:
+#          disabled: true
+#        certificate:
+#          secretName: custom-kibana-tls-secret
 
