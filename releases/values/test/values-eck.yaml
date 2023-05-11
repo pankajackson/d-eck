@@ -143,10 +143,9 @@ eck-kibana:
           port: 5601
           targetPort: http
           type: LoadBalancer
-#      TODO: TLS
-#      tls:
-#        selfSignedCertificate:
-#          disabled: true
-#        certificate:
-#          secretName: custom-kibana-tls-secret
+      tls:
+        selfSignedCertificate:
+          disabled: true
+        certificate:
+          secretName: custom-kibana-tls-secret
 
