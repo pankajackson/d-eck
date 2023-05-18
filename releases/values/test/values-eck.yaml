@@ -113,6 +113,23 @@ eck-elasticsearch:
             storage: 5Gi
         # storageClassName: local-storage
 
+  http:
+    service:
+      spec:
+        type: LoadBalancer
+#        ports:
+#        - name: https
+#          protocol: TCP
+#          port: 9200
+#          targetPort: 9200
+#          nodePort: 39200
+    tls:
+      selfSignedCertificate:
+        disabled: true
+      certificate:
+        secretName: custom-tls-secret
+
+
 eck-kibana:
   enabled: true
   version: 7.17.7
@@ -140,12 +157,16 @@ eck-kibana:
     http:
       service:
         spec:
-          port: 5601
-          targetPort: http
           type: LoadBalancer
+#          ports:
+#          - name: https
+#            protocol: TCP
+#            port: 5601
+#            targetPort: 5601
+#            nodePort: 35601
       tls:
         selfSignedCertificate:
           disabled: true
         certificate:
-          secretName: custom-kibana-tls-secret
+          secretName: custom-tls-secret
 
