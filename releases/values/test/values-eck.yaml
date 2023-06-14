@@ -7,20 +7,27 @@ eck-elasticsearch:
     eck.k8s.elastic.co/license: basic
   nodeSets:
   - name: masters
-    count: 3
+    count: 1
     config:
       node.roles: ["master"]
-#      TODO: LDAP
-#      xpack:
-#        security:
-#          authc:
-#            realms:
-#              active_directory:
-#                disad:
-#                  order: 0
-#                  domain_name: ad.example.com
-#                  url: ldaps://ad.example.com:636
-#                  bind_dn: es_svc_user@ad.example.com
+      xpack:
+        security:
+          authc:
+            realms:
+              # active_directory:
+              ldap:
+                disad:
+                  order: 1
+                  url: "ldap://openldap.openldap:389"
+#                  bind_dn: "cn=admin,dc=jackson,dc=com"
+#                  bind_password: 'Not@SecurePassw0rd'
+#                  user_search:
+#                    base_dn: "ou=users,dc=jackson,dc=com"
+#                    filter: "(cn={0})"
+                  user_dn_templates:
+                    - "cn={0}, ou=users, dc=jackson, dc=com"
+                  group_search:
+                    base_dn: "dc=jackson,dc=com"
     podTemplate:
       spec:
         containers:
@@ -53,6 +60,24 @@ eck-elasticsearch:
     count: 1
     config:
       node.roles: ["data_hot", "data_content", "ingest"]
+      xpack:
+        security:
+          authc:
+            realms:
+              # active_directory:
+              ldap:
+                disad:
+                  order: 1
+                  url: "ldap://openldap.openldap:389"
+#                  bind_dn: "cn=admin,dc=jackson,dc=com"
+#                  bind_password: 'Not@SecurePassw0rd'
+#                  user_search:
+#                    base_dn: "ou=users,dc=jackson,dc=com"
+#                    filter: "(cn={0})"
+                  user_dn_templates:
+                    - "cn={0}, ou=users, dc=jackson, dc=com"
+                  group_search:
+                    base_dn: "dc=jackson,dc=com"
     podTemplate:
       spec:
         containers:
@@ -82,9 +107,27 @@ eck-elasticsearch:
             storage: 8Gi
         # storageClassName: local-storage
   - name: cold
-    count: 1
+    count: 0
     config:
       node.roles: ["data_cold"]
+      xpack:
+        security:
+          authc:
+            realms:
+              # active_directory:
+              ldap:
+                disad:
+                  order: 1
+                  url: "ldap://openldap.openldap:389"
+#                  bind_dn: "cn=admin,dc=jackson,dc=com"
+#                  bind_password: 'Not@SecurePassw0rd'
+#                  user_search:
+#                    base_dn: "ou=users,dc=jackson,dc=com"
+#                    filter: "(cn={0})"
+                  user_dn_templates:
+                    - "cn={0}, ou=users, dc=jackson, dc=com"
+                  group_search:
+                    base_dn: "dc=jackson,dc=com"
     podTemplate:
       spec:
         containers:
