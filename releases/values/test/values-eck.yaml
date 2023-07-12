@@ -45,6 +45,15 @@ eck-elasticsearch:
             privileged: true
             runAsUser: 0
           command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: dedicated
+                      operator: In
+                      values:
+                        - master
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
@@ -95,6 +104,15 @@ eck-elasticsearch:
             privileged: true
             runAsUser: 0
           command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: dedicated
+                      operator: In
+                      values:
+                        - hot
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
@@ -145,6 +163,15 @@ eck-elasticsearch:
             privileged: true
             runAsUser: 0
           command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: dedicated
+                      operator: In
+                      values:
+                        - cold
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
