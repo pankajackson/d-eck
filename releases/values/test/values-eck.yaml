@@ -7,7 +7,7 @@ eck-elasticsearch:
     eck.k8s.elastic.co/license: basic
   nodeSets:
   - name: masters
-    count: 1
+    count: 3
     config:
       node.roles: ["master"]
       xpack:
@@ -45,15 +45,24 @@ eck-elasticsearch:
             privileged: true
             runAsUser: 0
           command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                    - key: dedicated
-                      operator: In
-                      values:
-                        - master
+#        affinity:
+#          nodeAffinity:
+#            requiredDuringSchedulingIgnoredDuringExecution:
+#              nodeSelectorTerms:
+#                - matchExpressions:
+#                    - key: kubernetes.io/hostname
+#                      operator: In
+#                      values:
+#                        - kube-worker01-110001
+#          podAntiAffinity:
+#            requiredDuringSchedulingIgnoredDuringExecution:
+#            - labelSelector:
+#                matchExpressions:
+#                - key: elasticsearch.k8s.elastic.co/statefulset-name
+#                  operator: In
+#                  values:
+#                  - dht-elastic-es-masters
+#              topologyKey: kubernetes.io/hostname
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
@@ -66,7 +75,7 @@ eck-elasticsearch:
             storage: 5Gi
         # storageClassName: local-storage
   - name: hot
-    count: 1
+    count: 3
     config:
       node.roles: ["data_hot", "data_content", "ingest"]
       xpack:
@@ -104,15 +113,24 @@ eck-elasticsearch:
             privileged: true
             runAsUser: 0
           command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                    - key: dedicated
-                      operator: In
-                      values:
-                        - hot
+#        affinity:
+#          nodeAffinity:
+#            requiredDuringSchedulingIgnoredDuringExecution:
+#              nodeSelectorTerms:
+#                - matchExpressions:
+#                    - key: kubernetes.io/hostname
+#                      operator: In
+#                      values:
+#                        - kube-worker02-210001
+#          podAntiAffinity:
+#            requiredDuringSchedulingIgnoredDuringExecution:
+#            - labelSelector:
+#                matchExpressions:
+#                - key: elasticsearch.k8s.elastic.co/statefulset-name
+#                  operator: In
+#                  values:
+#                  - dht-elastic-es-hot
+#              topologyKey: kubernetes.io/hostname
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
@@ -125,7 +143,7 @@ eck-elasticsearch:
             storage: 8Gi
         # storageClassName: local-storage
   - name: cold
-    count: 0
+    count: 3
     config:
       node.roles: ["data_cold"]
       xpack:
@@ -163,15 +181,24 @@ eck-elasticsearch:
             privileged: true
             runAsUser: 0
           command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                    - key: dedicated
-                      operator: In
-                      values:
-                        - cold
+#        affinity:
+#          nodeAffinity:
+#            requiredDuringSchedulingIgnoredDuringExecution:
+#              nodeSelectorTerms:
+#                - matchExpressions:
+#                    - key: kubernetes.io/hostname
+#                      operator: In
+#                      values:
+#                        - kube-worker03-310001
+#          podAntiAffinity:
+#            requiredDuringSchedulingIgnoredDuringExecution:
+#            - labelSelector:
+#                matchExpressions:
+#                - key: elasticsearch.k8s.elastic.co/statefulset-name
+#                  operator: In
+#                  values:
+#                  - dht-elastic-es-cold
+#              topologyKey: kubernetes.io/hostname
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
