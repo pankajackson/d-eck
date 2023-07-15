@@ -1,7 +1,7 @@
 ---
 eck-elasticsearch:
   enabled: true
-  version: 7.17.7
+  version: 8.0.1
   fullnameOverride: dht-elastic
   annotations:
     eck.k8s.elastic.co/license: basic
@@ -9,7 +9,7 @@ eck-elasticsearch:
   - name: masters
     count: 3
     config:
-      node.roles: ["master"]
+      node.roles: ["master", "remote_cluster_client"] # requird remote_cluster_client role to access monitoring in version 8.X.X
       xpack:
         security:
           authc:
@@ -77,7 +77,7 @@ eck-elasticsearch:
   - name: hot
     count: 3
     config:
-      node.roles: ["data_hot", "data_content", "ingest"]
+      node.roles: ["data_hot", "data_content", "ingest", "remote_cluster_client"] # requird remote_cluster_client role to access monitoring in version 8.X.X
       xpack:
         security:
           authc:
@@ -145,7 +145,7 @@ eck-elasticsearch:
   - name: cold
     count: 3
     config:
-      node.roles: ["data_cold"]
+      node.roles: ["data_cold", "remote_cluster_client"] # requird remote_cluster_client role to access monitoring in version 8.X.X
       xpack:
         security:
           authc:
@@ -229,7 +229,7 @@ eck-elasticsearch:
 
 eck-kibana:
   enabled: true
-  version: 7.17.7
+  version: 8.0.1
   fullnameOverride: dht-kibana
   annotations:
     eck.k8s.elastic.co/license: basic
